@@ -1,6 +1,28 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
+import "./set-public-path";
+import { h, createApp } from 'vue';
+import singleSpaVue from 'single-spa-vue';
 
-createApp(App).use(store).use(router).mount('#app')
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import { Quasar } from 'quasar'
+import quasarUserOptions from './quasar-user-options'
+
+const vueLifecycles = singleSpaVue({
+  createApp,
+  appOptions: {
+    render() {
+      return h(App, {
+      });
+    },
+  },
+  handleInstance(app) {
+    app.use(Quasar, quasarUserOptions);
+    app.use(router);
+    app.use(store);
+  },
+});
+
+export const bootstrap = vueLifecycles.bootstrap;
+export const mount = vueLifecycles.mount;
+export const unmount = vueLifecycles.unmount;
